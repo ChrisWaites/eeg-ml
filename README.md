@@ -15,8 +15,7 @@ using commercially available hardware.
 [Statistical Classification](https://en.wikipedia.org/wiki/Statistical_classification)
 attempts to address the problem of identifying, given a sample from an unknown distribution `X`,
 the most likely category `C` it corresponds to. In our case, this means attempting to determine
-the most probable state of a human, from a discrete set of potential states, from their current
-(or a recent) EEG.
+the most probable state of an individual given a recent window of their EEG.
 
 
 ### As a Generative Modeling Problem
