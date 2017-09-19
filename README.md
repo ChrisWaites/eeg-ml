@@ -22,7 +22,7 @@ the most probable state of an individual given a recent window of their EEG.
 
 <img src="images/generated_samples.png" width="250px">
 
-[Generative modeling](https://en.wikipedia.org/wiki/Generative_model) in
+[Generative Modeling](https://en.wikipedia.org/wiki/Generative_model) in
 contrast actually attempts to learn the entire underlying distribution of a set of
 samples itself. With respect to our goals, this means attempting to
 generate a realistic looking sample of a person's EEG given their current
