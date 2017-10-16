@@ -9,9 +9,9 @@ import csv
 import random
 import time
 
-X_dim = 6 # 784
-mb_size = 64 # 128
-Z_dim = 100 # 100
+X_dim = 6 
+mb_size = 64 
+Z_dim = 100 
 
 def xavier_init(size):
     in_dim = size[0]
@@ -61,21 +61,6 @@ def discriminator(x):
     return D_prob, D_logit
 
 
-# def plot(samples):
-#     fig = plt.figure(figsize=(4, 4))
-#     gs = gridspec.GridSpec(4, 4)
-#     gs.update(wspace=0.05, hspace=0.05)
-
-#     for i, sample in enumerate(samples):
-#         ax = plt.subplot(gs[i])
-#         plt.axis('off')
-#         ax.set_xticklabels([])
-#         ax.set_yticklabels([])
-#         ax.set_aspect('equal')
-#         plt.imshow(sample.reshape(28, 28), cmap='Greys_r')
-
-#     return fig
-
 readings = []
 max_reading = 0
 with open('alpha.csv') as f:
@@ -108,7 +93,6 @@ G_loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=D_logit_f
 D_solver = tf.train.AdamOptimizer().minimize(D_loss, var_list=theta_D)
 G_solver = tf.train.AdamOptimizer().minimize(G_loss, var_list=theta_G)
 
-# mnist = input_data.read_data_sets('../../MNIST_data', one_hot=True)
 
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
@@ -122,14 +106,7 @@ for it in range(30000):
     if it % 1000 == 0:
         samples = sess.run(G_sample, feed_dict={Z: sample_Z(1000, Z_dim)})
 
-        # fig = plot(samples)
-        # plt.savefig('out/{}.png'.format(str(i).zfill(3)), bbox_inches='tight')
-        # i += 1
-        # plt.close(fig)
-
     X_mb = new_minibatch(mb_size)
-
-    # X_mb, _ = mnist.train.next_batch(mb_size)
 
     _, D_loss_curr = sess.run([D_solver, D_loss], feed_dict={X: X_mb, Z: sample_Z(mb_size, Z_dim)})
     _, G_loss_curr = sess.run([G_solver, G_loss], feed_dict={Z: sample_Z(mb_size, Z_dim)})

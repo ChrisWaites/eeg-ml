@@ -9,7 +9,6 @@ import pynput
 import pickle
 import logging
 import classification
-import matplotlib.pyplot as plt
 import threading
 
 # Constants
@@ -69,36 +68,11 @@ def predict_labels(sample, optimal_classifier):
                         current_state = new_state
                         print(current_state)
 
-
 def handle_key(key):
 	global eyes_closed
 	if key == pynput.keyboard.Key.space:
 		eyes_closed = 0 if eyes_closed else 1
 		print('Eye state change to ' + str(eyes_closed))
-
-
-#thread for plotting
-def plotting_thread():
-    x = np.array(range(8, 14)) #change to handle later detections
-    y = np.array(range(8, 14))
-
-    plt.ion()
-
-    fig = plt.figure()
-    ax = fig.add_subplot(1, 1, 1)
-
-    line, = ax.plot(x, y)
-
-    ax.set_xbound(8, 13) # change if you want to do more than alpha
-    ax.set_ybound(0, 5000) # might need to change range here too
-    while(plotting):
-        #wait to plot again
-        time.sleep(PLOT_FREQ)
-        to_plot = np.array(calc_feature_vector())
-
-        #plot
-	line.set_ydata(to_plot)
-	fig.canvas.draw()
 
 raw_input('Press enter to begin labelling.')
 
@@ -107,11 +81,7 @@ with pynput.keyboard.Listener(on_press=handle_key) as key_listener:
     print("Done.\n")
     print("Starting labelling stream...")
     print("Current eye state 0. Press space to change state.")
-    # plot_thread = threading.Thread(target = plotting_thread, args=[])
-    # plot_thread.start()
-    # plotting = True
     board.start_streaming(label_samples, lapse=EXPERIMENT_TIME)
-    # plotting = False
     print("Done.\n")
 
 if not os.path.exists(START_TIME):
@@ -134,14 +104,9 @@ print("Done.\n")
 
 optimal_classifier = max(results, key=lambda x: x[2])[1]
 
-# with open('04-04-2017_18-56-36/04-04-2017_18-56-36_Nearest_Neighbors.pickle') as f:
-# 	optimal_classifier = pickle.load(f)
-
 raw_input ('Press enter key to begin testing.')
 
 print("Starting testing stream...")
-# plotting = True
 board.start_streaming(lambda s: predict_labels(s, optimal_classifier), lapse=EXPERIMENT_TIME)
 print("Done.\n")
-# plotting = False
 
